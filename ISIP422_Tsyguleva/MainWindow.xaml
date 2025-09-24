@@ -1,12 +1,92 @@
 ﻿<Window x:Class="ISIP422_Tsyguleva.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ISIP422_Tsyguleva"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Учёт товаров в магазине" Height="700" Width="900"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Поиск товаров" Margin="0,0,5,5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Поиск по:" VerticalAlignment="Center" Margin="5,0"/>
+                <ComboBox Width="100" Margin="5" 
+                         ItemsSource="{Binding SearchTypes}"
+                         SelectedItem="{Binding SelectedSearchType}"/>
+                <TextBox Width="200" Margin="5" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Найти" Margin="5" Width="60" Command="{Binding SearchCommand}"/>
+                <Button Content="Сброс" Margin="5" Width="60" Click="ResetSearch_Click"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Список товаров" Margin="0,0,5,5">
+            <ListView ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Код" Width="80" DisplayMemberBinding="{Binding Code}"/>
+                        <GridViewColumn Header="Название" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Цена" Width="80" DisplayMemberBinding="{Binding Price, StringFormat={}{0:C}}"/>
+                        <GridViewColumn Header="Количество" Width="80" DisplayMemberBinding="{Binding Quantity}"/>
+                        <GridViewColumn Header="В наличии" Width="80" DisplayMemberBinding="{Binding IsInStock}"/>
+                        <GridViewColumn Header="Категория" Width="100" DisplayMemberBinding="{Binding Category}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,5">
+            <GroupBox Header="Добавить новый товар">
+                <StackPanel>
+                    <TextBlock Text="Название:" Margin="5,2"/>
+                    <TextBox Margin="5,2" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Цена:" Margin="5,2"/>
+                    <TextBox Margin="5,2" Text="{Binding NewPrice, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Количество:" Margin="5,2"/>
+                    <TextBox Margin="5,2" Text="{Binding NewQuantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Категория:" Margin="5,2"/>
+                    <ComboBox Margin="5,2" ItemsSource="{Binding Categories}" 
+                             SelectedItem="{Binding NewCategory}"/>
+
+                    <Button Content="Добавить товар" Margin="5" Height="30" 
+                           Command="{Binding AddProductCommand}" Background="LightGreen"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Управление выбранным товаром" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="{Binding SelectedProduct}" TextWrapping="Wrap" 
+                              Background="LightYellow" Padding="5" MinHeight="60"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Button Content="Удалить" Margin="0,0,5,0" Width="80" Height="25"
+                               Command="{Binding DeleteProductCommand}" Background="LightCoral"/>
+                        <Button Content="Поставка" Margin="5,0" Width="80" Height="25"
+                               Command="{Binding OrderSupplyCommand}" Background="LightBlue"/>
+                        <Button Content="Продать" Margin="5,0,0,0" Width="80" Height="25"
+                               Command="{Binding SellProductCommand}" Background="LightGreen"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Кол-во поставки:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Width="50" Text="{Binding SupplyQuantity}" Margin="0,0,20,0"/>
+                        <TextBlock Text="Кол-во продажи:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Width="50" Text="{Binding SellQuantity}"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,0" 
+                  Text="Для работы с товаром выберите его в списке" FontStyle="Italic" 
+                  HorizontalAlignment="Center"/>
     </Grid>
 </Window>
